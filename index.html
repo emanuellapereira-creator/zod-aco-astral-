@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zodíaco Astral - Descubra seu Signo</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Cinzel e Inter) -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #0a0e1a;
+            --bg-card: rgba(18, 24, 43, 0.75);
+            --gold-primary: #f39c12;
+            --gold-light: #f1c40f;
+            --gold-gradient: linear-gradient(135deg, #f39c12 0%, #f1c40f 50%, #e67e22 100%);
+            --purple-accent: #8e44ad;
+            --purple-glow: rgba(142, 68, 173, 0.3);
+            --text-light: #ecf0f1;
+            --text-muted: #a0aec0;
+            --border-glow: rgba(243, 156, 18, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 15% 15%, rgba(142, 68, 173, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(243, 156, 18, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(10, 14, 26, 0.9) 0%, var(--bg-deep) 100%);
+            background-attachment: fixed;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Efeito de Estrelas de Fundo */
+        .stars-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background: transparent url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><circle cx="20" cy="30" r="1" fill="%23ffffff" opacity="0.4"/><circle cx="120" cy="80" r="1.5" fill="%23f1c40f" opacity="0.6"/><circle cx="280" cy="40" r="1" fill="%23ffffff" opacity="0.5"/><circle cx="350" cy="150" r="1.2" fill="%23ffffff" opacity="0.3"/><circle cx="80" cy="220" r="1" fill="%23ffffff" opacity="0.4"/><circle cx="220" cy="280" r="1.8" fill="%23f1c40f" opacity="0.7"/><circle cx="310" cy="330" r="1" fill="%23ffffff" opacity="0.5"/><circle cx="50" cy="350" r="1.5" fill="%23ffffff" opacity="0.4"/></svg>') repeat;
+            animation: twinkle 20s infinite linear;
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: 0.7;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.7;
+            }
+        }
+
+        /* Tipografia Elegante */
+        h1,
+        h2,
+        h3,
+        h4,
+        .brand-font {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+        }
+
+        .gold-text {
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        /* Cartões com Visual Translucido (Glassmorphism) */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 15px rgba(142, 68, 173, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(243, 156, 18, 0.5);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(243, 156, 18, 0.2);
+        }
+
+        /* Formulários Customizados */
+        .form-control,
+        .form-select {
+            background: rgba(10, 14, 26, 0.7);
+            border: 1px solid rgba(243, 156, 18, 0.3);
+            color: #fff;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background: rgba(15, 20, 35, 0.9);
+            border-color: var(--gold-primary);
+            color: #fff;
+            box-shadow: 0 0 12px rgba(243, 156, 18, 0.3);
+        }
+
+        .form-control::-webkit-calendar-picker-indicator {
+            filter: invert(1) sepia(1) saturate(5) hue-rotate(5deg);
+            cursor: pointer;
+        }
+
+        /* Botões Estilizados */
+        .btn-astral {
+            background: var(--gold-gradient);
+            border: none;
+            color: #0d1117;
+            font-weight: 700;
+            font-family: 'Cinzel', serif;
+            padding: 12px 30px;
+            border-radius: 30px;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn-astral:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.5);
+            color: #000;
+        }
+
+        .btn-outline-astral {
+            background: transparent;
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-primary);
+            border-radius: 30px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-astral:hover {
+            background: rgba(243, 156, 18, 0.15);
+            color: var(--gold-light);
+            border-color: var(--gold-light);
+        }
+
+        /* Badges e Tags */
+        .badge-element {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .element-fogo {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.4);
+        }
+
+        .element-terra {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.4);
+        }
+
+        .element-ar {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            border: 1px solid rgba(52, 152, 219, 0.4);
+        }
+
+        .element-agua {
+            background: rgba(155, 89, 182, 0.2);
+            color: #9b59b6;
+            border: 1px solid rgba(155, 89, 182, 0.4);
+        }
+
+        /* Animação de Transição de Seção */
+        .view-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .view-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Elemento Visual do Signo */
+        .sign-icon-large {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(142, 68, 173, 0.3) 0%, rgba(10, 14, 26, 0.8) 70%);
+            border: 2px solid var(--gold-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 0 0 30px rgba(243, 156, 18, 0.3);
+            font-size: 4rem;
+            color: var(--gold-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(243, 156, 18, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="stars-bg"></div>
+
+    <div class="container py-4 position-relative" style="z-index: 2;">
+
+        <!-- Cabeçalho Principal -->
+        <header class="text-center my-4">
+            <h1 class="display-4 gold-text fw-bold">
+                <i class="fa-solid fa-moon me-2"></i>ZODÍACO ASTRAL
+            </h1>
+            <p class="text-muted fs-5">Descubra os mistérios e segredos guardados pelas estrelas</p>
+        </header>
+
+        <!-- VIEW 1: HOME - Formulário de Data de Nascimento -->
+        <section id="view-home" class="view-section active">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-8">
+                    <div class="glass-card p-4 p-md-5 text-center">
+                        <div class="mb-4">
+                            <i class="fa-solid fa-compass-drafting text-warning fs-1 mb-3"></i>
+                            <h2 class="h3 gold-text">Consulte Seu Signo</h2>
+                            <p class="text-muted small">Insira sua data de nascimento para revelar a constelação regente
+                                e suas características solares.</p>
+                        </div>
+
+                        <form id="zodiac-form" onsubmit="handleFormSubmit(event)">
+                            <div class="mb-4 text-start">
+                                <label for="birthdate" class="form-label text-light fw-medium">
+                                    <i class="fa-regular fa-calendar-days me-2 gold-text"></i>Data de Nascimento:
+                                </label>
+                                <input type="date" id="birthdate" class="form-control" required>
+                            </div>
+
+                            <div class="mb-4 text-start">
+                                <label for="user-name" class="form-label text-light fw-medium">
+                                    <i class="fa-regular fa-user me-2 gold-text"></i>Seu Nome (Opcional):
+                                </label>
+                                <input type="text" id="user-name" class="form-control" placeholder="Ex: Maria Silva">
+                            </div>
+
+                            <button type="submit" class="btn btn-astral w-full w-md-auto me-2 my-1">
+                                <i class="fa-solid fa-sparkles me-2"></i>Revelar Signo
+                            </button>
+                        </form>
+
+                        <!-- Histórico de Consultas Salvas no BD SQLite/IndexedDB -->
+                        <div class="mt-5 pt-4 border-top border-secondary border-opacity-25 text-start">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="h6 gold-text mb-0">
+                                    <i class="fa-solid fa-database me-2"></i>Consultas Recentes (BD)
+                                </h3>
+                                <button onclick="clearHistory()" class="btn btn-sm text-danger text-opacity-75 p-0"
+                                    title="Limpar Histórico">
+                                    <i class="fa-solid fa-trash-can me-1"></i>Limpar
+                                </button>
+                            </div>
+                            <div id="history-container" style="max-height: 180px; overflow-y: auto;">
+                                <p class="text-muted small italic">Nenhuma consulta salva ainda.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: RESULTADO - Detalhes Completos do Signo -->
+        <section id="view-result" class="view-section">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <button onclick="navigateTo('view-home')" class="btn btn-outline-astral mb-4">
+                        <i class="fa-solid fa-arrow-left me-2"></i>Voltar à Consulta
+                    </button>
+
+                    <div class="glass-card p-4 p-md-5">
+                        <!-- Topo: Ícone e Título -->
+                        <div class="text-center mb-5">
+                            <div class="sign-icon-large mb-3" id="res-icon">
+                                ♈
+                            </div>
+                            <h2 class="display-5 gold-text mb-1" id="res-name">Áries</h2>
+                            <p class="text-muted fs-5 mb-2" id="res-period">21 de Março - 19 de Abril</p>
+                            <span id="res-element-badge" class="badge-element element-fogo">
+                                Elemento: Fogo
+                            </span>
+                        </div>
+
+                        <!-- Grid de Informações Principais -->
+                        <div class="row g-4 mb-5">
+                            <div class="col-md-4">
+                                <div
+                                    class="p-3 rounded-4 bg-dark bg-opacity-50 border border-secondary border-opacity-25 text-center h-100">
+                                    <i class="fa-solid fa-globe text-warning fs-3 mb-2"></i>
+                                    <div class="text-muted small">Planeta Regente</div>
+                                    <div class="fs-5 fw-semibold gold-text" id="res-planet">Marte</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div
+                                    class="p-3 rounded-4 bg-dark bg-opacity-50 border border-secondary border-opacity-25 text-center h-100">
+                                    <i class="fa-solid fa-gem text-warning fs-3 mb-2"></i>
+                                    <div class="text-muted small">Símbolo & Qualidade</div>
+                                    <div class="fs-5 fw-semibold gold-text" id="res-symbol">O Carneiro</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div
+                                    class="p-3 rounded-4 bg-dark bg-opacity-50 border border-secondary border-opacity-25 text-center h-100">
+                                    <i class="fa-solid fa-heart text-warning fs-3 mb-2"></i>
+                                    <div class="text-muted small">Compatibilidade Ideal</div>
+                                    <div class="fs-5 fw-semibold gold-text" id="res-compatibility">Leão, Sagitário</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detalhes de Personalidade -->
+                        <div class="row g-4 mb-5">
+                            <div class="col-md-6">
+                                <div
+                                    class="p-4 rounded-4 bg-dark bg-opacity-40 border border-success border-opacity-25 h-100">
+                                    <h3 class="h5 text-success mb-3">
+                                        <i class="fa-solid fa-circle-check me-2"></i>Pontos Fortes
+                                    </h3>
+                                    <p class="text-light" id="res-strengths">Corajoso, determinado, confiante,
+                                        entusiasmado, otimista, honesto e apaixonado.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div
+                                    class="p-4 rounded-4 bg-dark bg-opacity-40 border border-danger border-opacity-25 h-100">
+                                    <h3 class="h5 text-danger mb-3">
+                                        <i class="fa-solid fa-circle-xmark me-2"></i>Pontos Fracos & Desafios
+                                    </h3>
+                                    <p class="text-light" id="res-weaknesses">Impaciente, temperamental, impulsivo,
+                                        agressivo e às vezes egocêntrico.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Previsão do Dia / Orientação Astral -->
+                        <div class="p-4 rounded-4 bg-gradient border border-warning border-opacity-25 mb-4"
+                            style="background: rgba(142, 68, 173, 0.15);">
+                            <h3 class="h5 gold-text mb-2">
+                                <i class="fa-solid fa-wand-magic-sparkles me-2"></i>Mensagem Astral do Dia
+                            </h3>
+                            <p class="text-light mb-0 italic" id="res-daily-message">
+                                "Sua energia está em alta. Aproveite a clareza mental para iniciar novos projetos e
+                                liderar iniciativas com sabedoria."
+                            </p>
+                        </div>
+
+                        <!-- Descrição Geral -->
+                        <div class="mb-4">
+                            <h3 class="h5 gold-text mb-3">
+                                <i class="fa-solid fa-book-open me-2"></i>Visão Geral do Signo
+                            </h3>
+                            <p class="text-light leading-relaxed" id="res-description">
+                                Descrição completa do signo...
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+
+        // --- 1. BASE DE DADOS COMPLETA DOS SIGNOS ---
+        const ZODIAC_DATA = [
+            {
+                id: "aries",
+                name: "Áries",
+                symbol: "♈",
+                symbolName: "O Carneiro",
+                element: "Fogo",
+                elementClass: "element-fogo",
+                planet: "Marte",
+                startMonth: 3, startDay: 21,
+                endMonth: 4, endDay: 19,
+                period: "21 de Março - 19 de Abril",
+                strengths: "Corajoso, determinado, confiante, entusiasmado, otimista e honesto.",
+                weaknesses: "Impaciente, temperamental, impulsivo, agressivo.",
+                compatibility: "Leão, Sagitário, Gêmeos",
+                description: "Áries é o primeiro signo do zodíaco, simbolizando o início de novos ciclos. Pessoas deste signo são conhecidas por sua liderança nata, energia inagotável e pioneirismo.",
+                messages: [
+                    "Hoje é um dia propício para tomar decisões ousadas e encarar novos desafios.",
+                    "Sua determinação abrirá portas que pareciam trancadas. Siga sua intuição.",
+                    "Pense duas vezes antes de reagir a provocações. A paciência será sua melhor aliada."
+                ]
+            },
+            {
+                id: "touro",
+                name: "Touro",
+                symbol: "♉",
+                symbolName: "O Touro",
+                element: "Terra",
+                elementClass: "element-terra",
+                planet: "Vênus",
+                startMonth: 4, startDay: 20,
+                endMonth: 5, endDay: 20,
+                period: "20 de Abril - 20 de Maio",
+                strengths: "Confiável, paciente, prático, devotado, responsável e estável.",
+                weaknesses: "Teimoso, possessivo, inflexível.",
+                compatibility: "Virgem, Capricórnio, Câncer",
+                description: "Taurinos são conhecidos pelo apego à estabilidade, conforto e apreciação dos prazeres sensoriais da vida. Possuem grande persistência para atingir seus objetivos.",
+                messages: [
+                    "A constância trará os frutos que você tanto espera no campo pessoal.",
+                    "Momento ideal para cultivar a tranquilidade e valorizar as conquistas seguras.",
+                    "Evite resistir tanto a mudanças; novos caminhos podem surpreender você positivamente."
+                ]
+            },
+            {
+                id: "gemeos",
+                name: "Gêmeos",
+                symbol: "♊",
+                symbolName: "Os Gêmeos",
+                element: "Ar",
+                elementClass: "element-ar",
+                planet: "Mercúrio",
+                startMonth: 5, startDay: 21,
+                endMonth: 6, endDay: 20,
+                period: "21 de Maio - 20 de Junho",
+                strengths: "Gentil, afetuoso, curioso, adaptável, habilidoso em aprender e trocar ideias.",
+                weaknesses: "Nervoso, inconsistente, indeciso.",
+                compatibility: "Libra, Aquário, Leão",
+                description: "Regidos por Mercúrio, os geminianos possuem mente rápida e versátil. São altamente comunicativos, curiosos e versáteis em diversas áreas da vida.",
+                messages: [
+                    "Sua capacidade de comunicação facilitará um acordo importante hoje.",
+                    "Canalize sua curiosidade para aprender algo completamente novo.",
+                    "Cuidado com a dispersão de energia. Mantenha o foco no que é prioritário."
+                ]
+            },
+            {
+                id: "cancer",
+                name: "Câncer",
+                symbol: "♋",
+                symbolName: "O Caranguejo",
+                element: "Água",
+                elementClass: "element-agua",
+                planet: "Lua",
+                startMonth: 6, startDay: 21,
+                endMonth: 7, endDay: 22,
+                period: "21 de Junho - 22 de Julho",
+                strengths: "Tenaz, altamente imaginativo, leal, emocional, simpático e persuasivo.",
+                weaknesses: "Ranzinza, manipulador, inseguro.",
+                compatibility: "Escorpião, Peixes, Touro",
+                description: "Protetores e intuítivos, os cancerianos são profundamente ligados aos sentimentos, à família e ao lar. Possuem grande empatia e inteligência emocional.",
+                messages: [
+                    "Escute sua intuição hoje, ela guiará suas relações de forma protetora e precisa.",
+                    "Crie um ambiente acolhedor para recarregar suas energias emocionais.",
+                    "Não guarde ressentimentos do passado; abra espaço para o novo."
+                ]
+            },
+            {
+                id: "leao",
+                name: "Leão",
+                symbol: "♌",
+                symbolName: "O Leão",
+                element: "Fogo",
+                elementClass: "element-fogo",
+                planet: "Sol",
+                startMonth: 7, startDay: 23,
+                endMonth: 8, endDay: 22,
+                period: "23 de Julho - 22 de Agosto",
+                strengths: "Criativo, apaixonado, generoso, caloroso, bem-humorado, carismático.",
+                weaknesses: "Arrogante, teimoso, egocêntrico, inflexível.",
+                compatibility: "Áries, Sagitário, Gêmeos",
+                description: "Leoninos irradiam confiança, calor humano e criatividade. Como regidos pelo Sol, gostam de se destacar e inspirar as pessoas ao seu redor.",
+                messages: [
+                    "Sua luz própria brilhará intensamente e inspirará colegas ao redor.",
+                    "Seja generoso com seu tempo e talentos; o universo retribuirá em dobro.",
+                    "Lembre-se de ouvir os outros com a mesma paixão com que se expressa."
+                ]
+            },
+            {
+                id: "virgem",
+                name: "Virgem",
+                symbol: "♍",
+                symbolName: "A Virgem",
+                element: "Terra",
+                elementClass: "element-terra",
+                planet: "Mercúrio",
+                startMonth: 8, startDay: 23,
+                endMonth: 9, endDay: 22,
+                period: "23 de Agosto - 22 de Setembro",
+                strengths: "Leal, analítico, gentil, trabalhador, prático, metódico.",
+                weaknesses: "Timidez, preocupação excessiva, criticismo consigo e com outros.",
+                compatibility: "Touro, Capricórnio, Câncer",
+                description: "Percepcionistas e atentos aos detalhes, virginianos possuem mente analítica invejável e um forte desejo de servir e aperfeiçoar tudo o que fazem.",
+                messages: [
+                    "Sua organização e atenção aos detalhes resolverão um problema complexo.",
+                    "Pegue leve consigo mesmo; a perfeição é uma jornada, não um destino.",
+                    "Um gesto de ajuda prática fará toda a diferença para alguém próximo."
+                ]
+            },
+            {
+                id: "libra",
+                name: "Libra",
+                symbol: "♎",
+                symbolName: "A Balança",
+                element: "Ar",
+                elementClass: "element-ar",
+                planet: "Vênus",
+                startMonth: 9, startDay: 23,
+                endMonth: 10, endDay: 22,
+                period: "23 de Setembro - 22 de Outubro",
+                strengths: "Cooperativo, diplomático, gracioso, justo, social, diplomata.",
+                weaknesses: "Indeciso, evita confrontos, carrega rancor.",
+                compatibility: "Gêmeos, Aquário, Leão",
+                description: "Amantes da harmonia, da beleza e da justiça, os librianos buscam equilíbrio em todas as áreas da vida e valorizam profundamente as parcerias.",
+                messages: [
+                    "Sua habilidade diplomática harmonizará um ambiente de tensão.",
+                    "Busque beleza nas pequenas coisas e traga mais equilíbrio à sua rotina.",
+                    "Confie em seu discernimento para tomar a decisão que vem adiando."
+                ]
+            },
+            {
+                id: "escorpiao",
+                name: "Escorpião",
+                symbol: "♏",
+                symbolName: "O Escorpião",
+                element: "Água",
+                elementClass: "element-agua",
+                planet: "Plutão & Marte",
+                startMonth: 10, startDay: 23,
+                endMonth: 11, endDay: 21,
+                period: "23 de Outubro - 21 de Novembro",
+                strengths: "Engenhoso, corajoso, apaixonado, leal, amigo verdadeiro, intuitivo.",
+                weaknesses: "Desconfiado, ciumento, reservado.",
+                compatibility: "Câncer, Peixes, Virgem",
+                description: "Intensos e profundos, os escorpianos enxergam além da superfície. Possuem forte intuição e uma capacidade admirável de se reinventar.",
+                messages: [
+                    "Sua percepção afiada revelará verdades importantes. Confie na sua intuição.",
+                    "Transforme desafios recentes em combustível para seu crescimento interpessoal.",
+                    "Permita-se confiar mais; a vulnerabilidade pode ser uma fortaleza."
+                ]
+            },
+            {
+                id: "sagitario",
+                name: "Sagitário",
+                symbol: "♐",
+                symbolName: "O Arqueiro",
+                element: "Fogo",
+                elementClass: "element-fogo",
+                planet: "Júpiter",
+                startMonth: 11, startDay: 22,
+                endMonth: 12, endDay: 21,
+                period: "22 de Novembro - 21 de Dezembro",
+                strengths: "Generoso, idealista, excelente senso de humor, otimista, aventureiro.",
+                weaknesses: "Promete mais do que pode entregar, impaciente, sem filtro.",
+                compatibility: "Áries, Leão, Libra",
+                description: "Eternos exploradores da vida, os sagitarianos amam a liberdade, viagens e o conhecimento filosófico. Seu otimismo é contagioso.",
+                messages: [
+                    "Expandir seus horizontes trará respostas que você procura há tempos.",
+                    "Mantenha o entusiasmo, mas certifique-se de cumprir os compromissos assumidos.",
+                    "Um bom conselho otimista seu aliviará o dia de uma pessoa amiga."
+                ]
+            },
+            {
+                id: "capricornio",
+                name: "Capricórnio",
+                symbol: "♑",
+                symbolName: "A Cabra",
+                element: "Terra",
+                elementClass: "element-terra",
+                planet: "Saturno",
+                startMonth: 12, startDay: 22,
+                endMonth: 1, endDay: 19,
+                period: "22 de Dezembro - 19 de Janeiro",
+                strengths: "Responsável, disciplinado, autocontrolado, bom gestor, ambicioso.",
+                weaknesses: "Sabe-tudo, unforgiving, condescendente, pessimista.",
+                compatibility: "Touro, Virgem, Escorpião",
+                description: "Sérios e focados, os capricornianos sobem montanhas com disciplina e perseverança. Possuem grande senso de responsabilidade e ambição sadia.",
+                messages: [
+                    "Seu foco e disciplina trarão reconhecimento sólido a longo prazo.",
+                    "Lembre-se de reservar momentos para o descanso e celebração de vitórias.",
+                    "A paciência estratégica garantirá o sucesso de suas metas."
+                ]
+            },
+            {
+                id: "aquario",
+                name: "Aquário",
+                symbol: "♒",
+                symbolName: "O Portador de Água",
+                element: "Ar",
+                elementClass: "element-ar",
+                planet: "Urano",
+                startMonth: 1, startDay: 20,
+                endMonth: 2, endDay: 18,
+                period: "20 de Janeiro - 18 de Fevereiro",
+                strengths: "Progressista, original, independente, humanitário, visão de futuro.",
+                weaknesses: "Corre de expressões emocionais, temperamental, distante.",
+                compatibility: "Gêmeos, Libra, Sagitário",
+                description: "Inovadores e visionários, aquarianos pensam à frente de seu tempo. Valorizam a liberdade, a originalidade e o bem-estar coletivo.",
+                messages: [
+                    "Sua visão inovadora encontrará soluções originais para antigos problemas.",
+                    "Valorize sua individualidade, mas mantenha-se conectado com quem o apoia.",
+                    "Um projeto comunitário ou colaborativo trará grandes satisfações."
+                ]
+            },
+            {
+                id: "peixes",
+                name: "Peixes",
+                symbol: "♓",
+                symbolName: "Os Peixes",
+                element: "Água",
+                elementClass: "element-agua",
+                planet: "Netuno",
+                startMonth: 2, startDay: 19,
+                endMonth: 3, endDay: 20,
+                period: "19 de Fevereiro - 20 de Março",
+                strengths: "Compassivo, artístico, intuitivo, gentil, sábio, musical.",
+                weaknesses: "Desejo de escapar da realidade, confiante demais, vitimista.",
+                compatibility: "Câncer, Escorpião, Touro",
+                description: "Sensíveis e sonhadores, os piscianos possuem forte conexão com as artes e a espiritualidade. São extremamente empáticos e compreensivos.",
+                messages: [
+                    "Sua sensibilidade artística e intuição estão afloradas; crie algo belo.",
+                    "A compaixão que você oferece aos outros deve ser direcionada a você também.",
+                    "Estabeleça limites saudáveis para proteger sua energia emocional."
+                ]
+            }
+        ];
+
+        // --- 2. BANCO DE DADOS LOCAL (Simulando SQLite via IndexedDB) ---
+        class ZodiacDB {
+            constructor() {
+                this.dbName = "ZodiacAstralDB";
+                this.version = 1;
+                this.db = null;
+            }
+
+            async init() {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(this.dbName, this.version);
+
+                    request.onupgradeneeded = (e) => {
+                        const db = e.target.result;
+                        if (!db.objectStoreNames.contains("history")) {
+                            const store = db.createObjectStore("history", { keyPath: "id", autoIncrement: true });
+                            store.createIndex("timestamp", "timestamp", { unique: false });
+                        }
+                    };
+
+                    request.onsuccess = (e) => {
+                        this.db = e.target.result;
+                        resolve(true);
+                    };
+
+                    request.onerror = (e) => {
+                        console.error("Erro ao abrir IndexedDB:", e);
+                        reject(e);
+                    };
+                });
+            }
+
+            async saveConsultation(name, birthdate, signName) {
+                if (!this.db) await this.init();
+                return new Promise((resolve, reject) => {
+                    const tx = this.db.transaction("history", "readwrite");
+                    const store = tx.objectStore("history");
+                    const data = {
+                        name: name || "Anônimo",
+                        birthdate: birthdate,
+                        signName: signName,
+                        timestamp: new Date().getTime()
+                    };
+                    const req = store.add(data);
+                    req.onsuccess = () => resolve(true);
+                    req.onerror = (err) => reject(err);
+                });
+            }
+
+            async getHistory() {
+                if (!this.db) await this.init();
+                return new Promise((resolve) => {
+                    const tx = this.db.transaction("history", "readonly");
+                    const store = tx.objectStore("history");
+                    const req = store.getAll();
+                    req.onsuccess = () => {
+                        // Retorna ordenado pelo mais recente
+                        const records = req.result || [];
+                        records.sort((a, b) => b.timestamp - a.timestamp);
+                        resolve(records);
+                    };
+                    req.onerror = () => resolve([]);
+                });
+            }
+
+            async clearAllHistory() {
+                if (!this.db) await this.init();
+                return new Promise((resolve) => {
+                    const tx = this.db.transaction("history", "readwrite");
+                    const store = tx.objectStore("history");
+                    const req = store.clear();
+                    req.onsuccess = () => resolve(true);
+                });
+            }
+        }
+
+        const db = new ZodiacDB();
+
+        // --- 3. LÓGICA DE CÁLCULO E NAVEGAÇÃO ---
+
+        // Função para encontrar signo pela data
+        function getZodiacSign(dateString) {
+            const date = new Date(dateString + 'T00:00:00');
+            const day = date.getDate();
+            const month = date.getMonth() + 1; // 1 - 12
+
+            for (const sign of ZODIAC_DATA) {
+                // Caso normal no mesmo ano
+                if (
+                    (month === sign.startMonth && day >= sign.startDay) ||
+                    (month === sign.endMonth && day <= sign.endDay)
+                ) {
+                    return sign;
+                }
+            }
+
+            // Tratamento especial para Capricórnio (Virada do Ano: Dez/Jan)
+            return ZODIAC_DATA.find(s => s.id === "capricornio");
+        }
+
+        // Alternar visualizações (SPA)
+        function navigateTo(viewId) {
+            document.querySelectorAll('.view-section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            setTimeout(() => {
+                document.getElementById(viewId).classList.add('active');
+            }, 100);
+        }
+
+        // Submissão do Formulário
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            const birthdate = document.getElementById('birthdate').value;
+            const userName = document.getElementById('user-name').value;
+
+            if (!birthdate) return;
+
+            const sign = getZodiacSign(birthdate);
+
+            // Exibir Detalhes na View de Resultado
+            renderSignDetails(sign, userName);
+
+            // Salvar no Banco de Dados
+            try {
+                await db.saveConsultation(userName, birthdate, sign.name);
+                await loadHistoryUI();
+            } catch (err) {
+                console.error("Erro ao salvar histórico:", err);
+            }
+
+            // Navegar para a tela de resultado
+            navigateTo('view-result');
+        }
+
+        // Renderizar Informações do Signo na Tela
+        function renderSignDetails(sign, userName) {
+            document.getElementById('res-icon').textContent = sign.symbol;
+            document.getElementById('res-name').textContent = sign.name + (userName ? ` de ${userName}` : '');
+            document.getElementById('res-period').textContent = sign.period;
+
+            const badge = document.getElementById('res-element-badge');
+            badge.textContent = `Elemento: ${sign.element}`;
+            badge.className = `badge-element ${sign.elementClass}`;
+
+            document.getElementById('res-planet').textContent = sign.planet;
+            document.getElementById('res-symbol').textContent = sign.symbolName;
+            document.getElementById('res-compatibility').textContent = sign.compatibility;
+            document.getElementById('res-strengths').textContent = sign.strengths;
+            document.getElementById('res-weaknesses').textContent = sign.weaknesses;
+            document.getElementById('res-description').textContent = sign.description;
+
+            // Selecionar mensagem aleatória do dia
+            const randomMsg = sign.messages[Math.floor(Math.random() * sign.messages.length)];
+            document.getElementById('res-daily-message').textContent = `"${randomMsg}"`;
+        }
+
+        // Carregar Histórico de Consultas na Interface
+        async function loadHistoryUI() {
+            const container = document.getElementById('history-container');
+            const history = await db.getHistory();
+
+            if (!history || history.length === 0) {
+                container.innerHTML = '<p class="text-muted small italic mb-0">Nenhuma consulta salva ainda.</p>';
+                return;
+            }
+
+            container.innerHTML = history.slice(0, 5).map(item => {
+                const dateFmt = new Date(item.birthdate + 'T00:00:00').toLocaleDateString('pt-BR');
+                return `
+                    <div class="history-item d-flex justify-content-between align-items-center" onclick="quickSearch('${item.birthdate}', '${item.name}')">
+                        <div>
+                            <strong class="gold-text">${item.signName}</strong> 
+                            <span class="text-light opacity-75">(${item.name})</span>
+                        </div>
+                        <small class="text-muted">${dateFmt}</small>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Pesquisa Rápida pelo Histórico
+        function quickSearch(birthdate, name) {
+            document.getElementById('birthdate').value = birthdate;
+            document.getElementById('user-name').value = name !== 'Anônimo' ? name : '';
+            const sign = getZodiacSign(birthdate);
+            renderSignDetails(sign, name !== 'Anônimo' ? name : '');
+            navigateTo('view-result');
+        }
+
+        // Limpar Histórico
+        async function clearHistory() {
+            await db.clearAllHistory();
+            await loadHistoryUI();
+        }
+
+        // Inicialização ao carregar a página
+        window.onload = async function () {
+            try {
+                await db.init();
+                await loadHistoryUI();
+            } catch (err) {
+                console.warn("IndexedDB não disponível, rodando em modo sem persistência.");
+            }
+        };
+    </script>
+</body>
+
+</html>
